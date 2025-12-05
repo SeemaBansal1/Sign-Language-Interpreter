@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Language Translator</title>
+    <meta name="description" content="Real-time sign language to text and audio translator using AI">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🤟</span>
+                    <h1>Sign Language Translator</h1>
+                </div>
+                <p class="tagline">Real-time AI-powered sign language recognition with audio output</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Video Container -->
+            <div class="video-section">
+                <div class="video-container">
+                    <div class="video-wrapper">
+                        <img src="{{ url_for('video_feed') }}" alt="Video Stream" class="video-stream">
+                        <div class="video-overlay">
+                            <div class="status-indicator" id="statusIndicator">
+                                <span class="status-dot"></span>
+                                <span class="status-text">Live</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Info Panel -->
+            <div class="info-section">
+                <!-- Current Prediction Card -->
+                <div class="card prediction-card">
+                    <h2>Current Sign</h2>
+                    <div class="prediction-display">
+                        <span id="predictionText" class="prediction-text">-</span>
+                    </div>
+                    <div class="confidence-bar">
+                        <div class="confidence-label">
+                            <span>Confidence</span>
+                            <span id="confidenceValue">0%</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar" id="confidenceBar"></div>
+                        </div>
+                    </div>
+                    <div class="hold-progress">
+                        <div class="hold-label">
+                            <span>Hold to Speak</span>
+                            <span id="holdTime">0.0s</span>
+                        </div>
+                        <div class="progress-container">
+                            <div class="progress-bar hold-bar" id="holdBar"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Instructions Card -->
+                <div class="card instructions-card">
+                    <h2>How to Use</h2>
+                    <ul class="instructions-list">
+                        <li>
+                            <span class="step-number">1</span>
+                            <span>Position your hand clearly in front of the camera</span>
+                        </li>
+                        <li>
+                            <span class="step-number">2</span>
+                            <span>Make a sign gesture from the trained set</span>
+                        </li>
+                        <li>
+                            <span class="step-number">3</span>
+                            <span>Hold the sign for 1 second to trigger audio</span>
+                        </li>
+                        <li>
+                            <span class="step-number">4</span>
+                            <span>Wait for the spoken translation</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Available Signs Card -->
+                <div class="card signs-card">
+                    <h2>Available Signs</h2>
+                    <div class="signs-list" id="signsList">
+                        <span class="loading">Loading...</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Powered by MediaPipe, Scikit-Learn & Flask</p>
+        </footer>
+    </div>
+
+    <script>
+        // Fetch status periodically
+        async function updateStatus() {
+            try {
+                const response = await fetch('/status');
+                const data = await response.json();
+
+                // Update prediction
+                const predText = document.getElementById('predictionText');
+                predText.textContent = data.prediction || '-';
+                predText.className = 'prediction-text' + (data.prediction ? ' active' : '');
+
+                // Update confidence
+                const confidence = Math.round(data.confidence * 100);
+                document.getElementById('confidenceValue').textContent = confidence + '%';
+                document.getElementById('confidenceBar').style.width = confidence + '%';
+
+                // Update hold time
+                const holdTime = data.held_time || 0;
+                document.getElementById('holdTime').textContent = holdTime.toFixed(1) + 's';
+                const holdProgress = Math.min((holdTime / 1.0) * 100, 100);
+                const holdBar = document.getElementById('holdBar');
+                holdBar.style.width = holdProgress + '%';
+                holdBar.className = 'progress-bar hold-bar' + (holdProgress >= 100 ? ' complete' : '');
+
+                // Update available signs
+                if (data.labels && data.labels.length > 0) {
+                    const signsList = document.getElementById('signsList');
+                    signsList.innerHTML = data.labels.map(label => 
+                        `<span class="sign-tag">${label}</span>`
+                    ).join('');
+                }
+
+            } catch (error) {
+                console.error('Error fetching status:', error);
+            }
+        }
+
+        // Update every 200ms for smooth UI
+        setInterval(updateStatus, 200);
+        updateStatus();
+    </script>
+</body>
+</html>
