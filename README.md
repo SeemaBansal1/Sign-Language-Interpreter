@@ -121,8 +121,7 @@ Open **http://localhost:5000** in your browser.
 
 ## 📋 Requirements
 
-- **Python 3.13.5** (recommended, tested)
-  - Also supports Python 3.11+ and 3.12+
+- **Python 3.11** (recommended, tested)
 - Webcam
 - Windows/macOS/Linux
 
