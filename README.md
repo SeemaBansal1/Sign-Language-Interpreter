@@ -6,7 +6,6 @@ A complete AI-powered application that translates sign language gestures to text
 ![OpenCV](https://img.shields.io/badge/OpenCV-4.8-green)
 ![MediaPipe](https://img.shields.io/badge/MediaPipe-0.10-orange)
 ![Flask](https://img.shields.io/badge/Flask-3.0-red)
-![License](https://img.shields.io/badge/License-MIT-yellow)
 
 ## ✨ Features
 
