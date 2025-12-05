@@ -38,8 +38,8 @@ sign-language-translator/
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/SilverMan1101/PyProject.git
-cd PyProject
+git clone https://github.com/SeemaBansal1/Sign-Language-Interpreter.git
+cd Sign-Language-Interpreter
 ```
 
 ### 2. Create Virtual Environment
