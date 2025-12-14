@@ -230,16 +230,6 @@ min_tracking_confidence=0.5
 
 ---
 
-## 👩‍💻 Author
-
-**Seema**  
-M.Sc. Computer Science - 3rd Semester  
-Department of Information and Communication Technology (ICT)
-
-*Under guidance of Mr. Hemant (Assistant Professor)*
-
----
-
 <p align="center">
   Made with ❤️ for accessibility
 </p>
