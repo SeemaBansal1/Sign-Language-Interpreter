@@ -43,49 +43,66 @@ class TTSManager:
     """Thread-safe text-to-speech manager."""
     
     def __init__(self):
-        self.engine = None
         self.lock = threading.Lock()
         self.is_speaking = False
-        self._init_engine()
-    
-    def _init_engine(self):
-        """Initialize the TTS engine."""
-        try:
-            self.engine = pyttsx3.init()
-            self.engine.setProperty('rate', 150)  # Speed
-            self.engine.setProperty('volume', 0.9)  # Volume
-            
-            # Try to set a good voice
-            voices = self.engine.getProperty('voices')
-            if voices:
-                # Prefer a female voice if available
-                for voice in voices:
-                    if 'female' in voice.name.lower() or 'zira' in voice.name.lower():
-                        self.engine.setProperty('voice', voice.id)
-                        break
-        except Exception as e:
-            print(f"TTS initialization error: {e}")
-            self.engine = None
+        self.speak_start_time = 0
+        self.speak_timeout = 5.0  # Max seconds to wait before allowing new speech
     
     def speak(self, text):
         """Speak text in a separate thread."""
-        if not self.engine or self.is_speaking:
+        current_time = time.time()
+        
+        # Reset is_speaking if it's been too long (timeout protection)
+        if self.is_speaking and (current_time - self.speak_start_time) > self.speak_timeout:
+            self.is_speaking = False
+        
+        if self.is_speaking:
             return
         
         def _speak():
-            with self.lock:
-                self.is_speaking = True
-                try:
-                    self.engine.say(text)
-                    self.engine.runAndWait()
-                except Exception as e:
-                    print(f"TTS error: {e}")
-                finally:
-                    self.is_speaking = False
+            self.is_speaking = True
+            self.speak_start_time = time.time()
+            try:
+                # Create a NEW engine instance in this thread (required for Windows)
+                engine = pyttsx3.init()
+                engine.setProperty('rate', 150)
+                engine.setProperty('volume', 0.9)
+                
+                # Try to set a good voice
+                voices = engine.getProperty('voices')
+                if voices:
+                    for voice in voices:
+                        if 'female' in voice.name.lower() or 'zira' in voice.name.lower():
+                            engine.setProperty('voice', voice.id)
+                            break
+                
+                engine.say(text)
+                engine.runAndWait()
+                engine.stop()
+            except Exception as e:
+                print(f"TTS Error: {e}")
+            finally:
+                self.is_speaking = False
         
         thread = threading.Thread(target=_speak)
         thread.daemon = True
         thread.start()
+    
+    def test_speech(self):
+        """Test if TTS is working."""
+        print("🔊 Testing text-to-speech...")
+        try:
+            engine = pyttsx3.init()
+            engine.setProperty('rate', 150)
+            engine.setProperty('volume', 0.9)
+            engine.say("Ready")
+            engine.runAndWait()
+            engine.stop()
+            print("✅ TTS ready")
+            return True
+        except Exception as e:
+            print(f"❌ TTS failed: {e}")
+            return False
 
 
 # Initialize TTS manager
@@ -162,20 +179,23 @@ class SignLanguageRecognizer:
             self.current_prediction = prediction
             self.prediction_start_time = current_time
             self.prediction_held_time = 0
+            # Reset last_spoken when prediction changes so new gesture can speak
+            if self.last_spoken_prediction != prediction:
+                self.last_spoken_prediction = None  # Allow new prediction to speak
         else:
             # Same prediction - update held time
             if self.prediction_start_time:
                 self.prediction_held_time = current_time - self.prediction_start_time
                 
-                # Check if should speak
+                # Check if should speak - speak when held for 1+ second and hasn't spoken this gesture yet
                 if (self.prediction_held_time >= self.hold_threshold and 
-                    prediction != self.last_spoken_prediction and
-                    confidence > 0.6):
+                    self.last_spoken_prediction != prediction and
+                    confidence > 0.5):
                     
                     # Trigger TTS
                     tts_manager.speak(prediction)
                     self.last_spoken_prediction = prediction
-                    print(f"Speaking: {prediction}")
+                    print(f"🔊 Speaking: {prediction}")
         
         self.display_prediction = prediction
         self.prediction_confidence = confidence
@@ -344,9 +364,21 @@ def generate_frames():
 # ============================================================================
 
 @app.route('/')
-def index():
-    """Serve the main page."""
+def home():
+    """Serve the home/landing page."""
+    return render_template('home.html')
+
+
+@app.route('/translator')
+def translator():
+    """Serve the translator page."""
     return render_template('index.html')
+
+
+@app.route('/guide')
+def guide():
+    """Serve the ASL alphabet guide page."""
+    return render_template('guide.html')
 
 
 @app.route('/video_feed')
@@ -388,6 +420,10 @@ def main():
         print("Please run these steps first:")
         print("  1. python collect_data.py  (collect training data)")
         print("  2. python train_model.py   (train the model)")
+    
+    # Test TTS on startup
+    print("\nTesting text-to-speech...")
+    tts_manager.test_speech()
     
     print("\nStarting server...")
     print("Open http://localhost:5000 in your browser")

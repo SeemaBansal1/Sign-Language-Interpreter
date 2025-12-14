@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SilentVoice | Real-Time Sign Language Translation</title>
+    <meta name="description"
+        content="AI-powered real-time sign language to text and audio translation. Break communication barriers with cutting-edge technology.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-icon">🤟</span>
+                <h1>SilentVoice</h1>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link active">
+                    <span class="nav-link-icon">🏠</span>
+                    <span>Home</span>
+                </a>
+                <a href="/translator" class="nav-link">
+                    <span class="nav-link-icon">🎥</span>
+                    <span>Translator</span>
+                </a>
+                <a href="/guide" class="nav-link">
+                    <span class="nav-link-icon">📖</span>
+                    <span>Guide</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <span class="moon-icon">🌙</span>
+                    <span class="sun-icon">☀️</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Hero Section -->
+        <section class="hero-section">
+            <div class="hero-badge">
+                <span class="hero-badge-dot"></span>
+                <span>AI-Powered Translation</span>
+            </div>
+
+            <h1 class="hero-title">Breaking Barriers<br>Through Technology</h1>
+
+            <p class="hero-subtitle">
+                Experience real-time sign language translation powered by advanced AI.
+                Our system recognizes hand gestures and converts them to text and speech instantly,
+                making communication accessible for everyone.
+            </p>
+
+            <div class="hero-buttons">
+                <a href="/translator" class="btn-primary">
+                    <span>🎥</span>
+                    <span>Start Translating</span>
+                </a>
+                <a href="/guide" class="btn-secondary">
+                    <span>📖</span>
+                    <span>Learn ASL Alphabet</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Features Section -->
+        <section class="features-section">
+            <h2 class="features-title">✨ Powerful Features</h2>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <span class="feature-icon">👁️</span>
+                    <h3 class="feature-title">Real-Time Detection</h3>
+                    <p class="feature-desc">Advanced computer vision processes your hand gestures in real-time with high
+                        accuracy and minimal latency.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🔊</span>
+                    <h3 class="feature-title">Voice Output</h3>
+                    <p class="feature-desc">Automatic text-to-speech conversion speaks out the recognized signs,
+                        enabling seamless communication.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🧠</span>
+                    <h3 class="feature-title">AI-Powered</h3>
+                    <p class="feature-desc">Machine learning models trained on extensive datasets ensure reliable and
+                        accurate sign recognition.</p>
+                </div>
+                <div class="feature-card">
+                    <span class="feature-icon">🌐</span>
+                    <h3 class="feature-title">Web-Based</h3>
+                    <p class="feature-desc">No installation required. Access the translator directly from your browser
+                        on any device.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Section -->
+        <section class="stats-section">
+            <div class="stat-card">
+                <div class="stat-number">26+</div>
+                <div class="stat-label">ASL Letters Supported</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">&lt;1s</div>
+                <div class="stat-label">Response Time</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">95%+</div>
+                <div class="stat-label">Accuracy Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-number">24/7</div>
+                <div class="stat-label">Available Anytime</div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-credits">
+                <p class="made-by">Made by</p>
+                <p class="author-name">Seema</p>
+                <p class="course-info">M.Sc. CS 3rd Semester</p>
+                <p class="department">Department of Information and Communication Technology (ICT)</p>
+                <p class="guidance">Under guidance of Mr. Hemant (Assistant Professor)</p>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/translator">Translator</a>
+                <a href="/guide">Guide</a>
+            </div>
+            <p class="footer-tech">Powered by MediaPipe, Scikit-Learn & Flask</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+
+</html>

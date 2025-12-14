@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASL Guide | SilentVoice</title>
+    <meta name="description" content="Learn the American Sign Language alphabet to use with our AI translator.">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+</head>
+
+<body>
+    <div class="app-container">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <a href="/" class="nav-logo">
+                <span class="nav-logo-icon">🤟</span>
+                <h1>SilentVoice</h1>
+            </a>
+            <div class="nav-links">
+                <a href="/" class="nav-link">
+                    <span class="nav-link-icon">🏠</span>
+                    <span>Home</span>
+                </a>
+                <a href="/translator" class="nav-link">
+                    <span class="nav-link-icon">🎥</span>
+                    <span>Translator</span>
+                </a>
+                <a href="/guide" class="nav-link active">
+                    <span class="nav-link-icon">📖</span>
+                    <span>Guide</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <span class="moon-icon">🌙</span>
+                    <span class="sun-icon">☀️</span>
+                </button>
+            </div>
+        </nav>
+
+        <!-- Guide Content -->
+        <main class="guide-container">
+            <div class="guide-header">
+                <h1>📚 ASL Alphabet Guide</h1>
+                <p>Learn the hand signs for each letter of the American Sign Language alphabet. Practice these gestures
+                    to communicate with our AI translator.</p>
+            </div>
+
+            <div class="guide-content">
+                <!-- Alphabet Image Card -->
+                <div class="card alphabet-card">
+                    <h2>✋ Complete ASL Alphabet</h2>
+                    <div class="alphabet-image-container">
+                        <img src="{{ url_for('static', filename='asl_alphabet.png') }}"
+                            alt="ASL Alphabet Chart showing hand signs for letters A through Y" class="alphabet-image">
+                    </div>
+                </div>
+
+                <!-- Quick Tips Card -->
+                <div class="card quick-tips-card">
+                    <h3>💡 Tips for Better Recognition</h3>
+                    <ul class="tips-list">
+                        <li>
+                            <span class="tip-icon">🔆</span>
+                            <span><strong>Good Lighting:</strong> Ensure your hand is well-lit and clearly visible
+                                against the background</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">📍</span>
+                            <span><strong>Center Position:</strong> Keep your hand centered in the camera frame for best
+                                results</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">🖐️</span>
+                            <span><strong>Clear Gestures:</strong> Form each letter distinctly with well-defined finger
+                                positions</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">⏱️</span>
+                            <span><strong>Hold Steady:</strong> Hold each sign for at least 1 second to trigger the
+                                audio</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">🎯</span>
+                            <span><strong>Single Hand:</strong> Use one hand at a time for clearer recognition</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">🔄</span>
+                            <span><strong>Practice:</strong> The more you practice, the better the AI will recognize
+                                your signs</span>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Getting Started Card -->
+                <div class="card getting-started-card">
+                    <h3>🚀 Getting Started</h3>
+                    <ul class="tips-list">
+                        <li>
+                            <span class="tip-icon">1️⃣</span>
+                            <span>Study the alphabet chart above to learn the hand shapes</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">2️⃣</span>
+                            <span>Start with simple letters like A, B, C, L, V, Y</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">3️⃣</span>
+                            <span>Practice each letter until you're comfortable</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">4️⃣</span>
+                            <span>Go to the Translator page and test your signs</span>
+                        </li>
+                        <li>
+                            <span class="tip-icon">5️⃣</span>
+                            <span>The AI will recognize and speak the letter you're signing!</span>
+                        </li>
+                    </ul>
+                    <a href="/translator" class="start-button">
+                        <span class="start-button-icon">🎥</span>
+                        <span>Start Translating Now</span>
+                    </a>
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-credits">
+                <p class="made-by">Made by</p>
+                <p class="author-name">Seema</p>
+                <p class="course-info">M.Sc. CS 3rd Semester</p>
+                <p class="department">Department of Information and Communication Technology (ICT)</p>
+                <p class="guidance">Under guidance of Mr. Hemant (Assistant Professor)</p>
+            </div>
+            <div class="footer-links">
+                <a href="/">Home</a>
+                <a href="/translator">Translator</a>
+                <a href="/guide">Guide</a>
+            </div>
+            <p class="footer-tech">Powered by MediaPipe, Scikit-Learn & Flask</p>
+        </footer>
+    </div>
+
+    <script>
+        // Theme Toggle
+        function toggleTheme() {
+            const html = document.documentElement;
+            const currentTheme = html.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            html.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+        }
+
+        // Load saved theme
+        document.addEventListener('DOMContentLoaded', () => {
+            const savedTheme = localStorage.getItem('theme') || 'dark';
+            document.documentElement.setAttribute('data-theme', savedTheme);
+        });
+    </script>
+</body>
+
+</html>
